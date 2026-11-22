@@ -1,0 +1,187 @@
+import React, { useState, useEffect } from 'react';
+
+const fallbackProjects = [
+  {
+    id: 1,
+    title: "Job Portal Platform",
+    category: "web",
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=800&q=80",
+    badge: "React Web Application",
+    description: "Comprehensive Job Portal web platform designed for job seekers and recruiters with search filters, job applications, company listings, and responsive UI.",
+    tags: ["React", "JavaScript", "REST API", "Tailwind/CSS"],
+    live: "https://job-portal-two-rho-42.vercel.app/",
+    github: "https://github.com/sujalrakshe/Job-Portal"
+  },
+  {
+    id: 2,
+    title: "Food Fusion - Full-Stack Delivery App",
+    category: "java web sql",
+    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
+    badge: "Full-Stack Enterprise App",
+    description: "Full-Stack online food ordering & multi-restaurant platform with customer ordering, cart drawer, AI chatbot, live dashboard, owner & delivery portals, and Spring Boot / SQL backend.",
+    tags: ["React 19", "Spring Boot", "SQL", "Docker", "REST API"],
+    live: "https://food-fusion-mocha.vercel.app/login",
+    github: "https://github.com/sujalrakshe/Food-Fusion"
+  },
+  {
+    id: 2,
+    title: "Banking System",
+    category: "java",
+    image: "/images/banking-system.png",
+    badge: "Java Console Application",
+    description: "Console-based banking simulation system developed using Core Java with robust Object-Oriented Programming (OOP) principles, supporting account management, transactions, and balance tracking.",
+    tags: ["Java", "OOP", "CLI"],
+    github: "https://github.com/sujalrakshe/Java-Project/blob/main/Task3.java"
+  },
+  {
+    id: 3,
+    title: "Salesforce UI Clone",
+    category: "web",
+    image: "/images/salesforce-clone.png",
+    badge: "Responsive Frontend",
+    description: "High-fidelity replica of the Salesforce landing page UI built using semantic HTML5 and CSS3 grid/flexbox layouts. Responsive across mobile, tablet, and desktop screens.",
+    tags: ["HTML5", "CSS3", "Flexbox"],
+    live: "https://dainty-blini-a9f1ee.netlify.app/",
+    github: "https://github.com/sujalrakshe/Web-Development-Project"
+  },
+  {
+    id: 4,
+    title: "Animated Hacker Login",
+    category: "web",
+    image: "/images/hacker-login.png",
+    badge: "Hacker Aesthetic UI",
+    description: "Stylish cyberpunk/hacker themed login page interface equipped with glow animations, custom input focus effects, and subtle CSS transitions.",
+    tags: ["HTML5", "CSS Animations", "JavaScript"],
+    live: "https://glowing-parfait-0f2904.netlify.app/",
+    github: "https://github.com/sujalrakshe/Login-Page"
+  },
+  {
+    id: 5,
+    title: "E-Commerce Data System",
+    category: "sql",
+    image: "/images/ecommerce-database.png",
+    badge: "SQL Database Schema",
+    description: "Relational SQL database project managing customers, products, orders, and payments. Features complex multi-table JOINs, stored procedures, automated triggers, and custom views.",
+    tags: ["SQL", "Relational DB", "Triggers & Views"],
+    github: "https://github.com/sujalrakshe/SQl-Project"
+  },
+  {
+    id: 6,
+    title: "E-Dictionary App",
+    category: "web",
+    image: "/images/e-dictionary.png",
+    badge: "Web Application",
+    description: "Interactive web dictionary application allowing users to search word definitions, phonetics, and sample usages with instant feedback using JavaScript DOM manipulation.",
+    tags: ["JavaScript", "HTML5", "CSS3"],
+    live: "https://quiet-phoenix-1aceea.netlify.app/",
+    github: "https://github.com/sujalrakshe/Web-Development-Projects"
+  },
+  {
+    id: 7,
+    title: "Employee Management System",
+    category: "java web sql",
+    image: "/images/employee-management.jpg",
+    badge: "Full-Stack Web App",
+    description: "Full-Stack Employee Management web application built with Java, Spring Boot, React, and SQL database. Supports employee management, salary metrics, department structures, and secure RESTful APIs.",
+    tags: ["Java", "Spring Boot", "React", "SQL"],
+    github: "https://github.com/sujalrakshe"
+  },
+  {
+    id: 8,
+    title: "Student Management System",
+    category: "java sql",
+    image: "/images/student-management.jpg",
+    badge: "Spring Boot Application",
+    description: "Backend enterprise portal for Student Management engineered using Java, Spring Boot framework, and SQL database. Handles student directory, course enrollments, grade records, and database queries.",
+    tags: ["Java", "Spring Boot", "SQL", "REST API"],
+    github: "https://github.com/sujalrakshe"
+  }
+];
+
+export default function Projects() {
+  const [projects, setProjects] = useState(fallbackProjects);
+  const [activeFilter, setActiveFilter] = useState('all');
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/projects')
+      .then((res) => {
+        if (!res.ok) throw new Error('Network error');
+        return res.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProjects(data);
+        }
+      })
+      .catch((err) => {
+        console.log('Using local fallback projects data:', err.message);
+      });
+  }, []);
+
+  const filteredProjects = projects.filter((proj) => {
+    if (activeFilter === 'all') return true;
+    return proj.category.includes(activeFilter);
+  });
+
+  const filterTabs = [
+    { key: 'all', label: 'All Projects' },
+    { key: 'java', label: 'Java & Backend' },
+    { key: 'web', label: 'Web Frontend' },
+    { key: 'sql', label: 'SQL & Database' }
+  ];
+
+  return (
+    <section id="portfolio" className="section-block">
+      <div className="section-header">
+        <h2 className="section-title">Featured Projects</h2>
+        <div className="title-underline"></div>
+      </div>
+
+      <div className="filter-tabs">
+        {filterTabs.map((tab) => (
+          <button
+            key={tab.key}
+            className={`tab-btn ${activeFilter === tab.key ? 'active' : ''}`}
+            onClick={() => setActiveFilter(tab.key)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="projects-grid">
+        {filteredProjects.map((proj) => (
+          <div key={proj.id} className="project-card">
+            <div className="project-img-wrapper">
+              <img src={proj.image} alt={proj.title} className="project-img" loading="lazy" />
+              <div className="project-overlay">
+                <span className="overlay-badge">{proj.badge}</span>
+              </div>
+            </div>
+            <div className="project-body">
+              <h3 className="project-title">{proj.title}</h3>
+              <p className="project-desc">{proj.description}</p>
+              <div className="project-tags">
+                {proj.tags.map((tag, idx) => (
+                  <span key={idx} className="tag">{tag}</span>
+                ))}
+              </div>
+              <div className="project-actions">
+                {proj.live && (
+                  <a href={proj.live} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-primary">
+                    <i className="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
+                  </a>
+                )}
+                {proj.github && (
+                  <a href={proj.github} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline">
+                    <i className="fa-brands fa-github"></i> GitHub
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
